@@ -107,12 +107,16 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
 
     public void print_output(String _src, String str){
         if(! isDebug){ return; }
+        this.stdout.println("------------------------"+_src+"-----------------------------------");
         this.stdout.println(_src + " :: " + str);
+        this.stdout.println("-------------------------------------------------------------------");
     }
 
     public void print_error(String _src, String str){
         if(! isDebug){ return; }
+        this.stdout.println("------------------------"+_src+"-----------------------------------");
         this.stderr.println(_src + " :: " + str);
+        this.stdout.println("-------------------------------------------------------------------");
     }
     
     public String get_host(String _url){
