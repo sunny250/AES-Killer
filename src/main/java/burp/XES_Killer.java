@@ -6,13 +6,13 @@
 package burp;
 
 import java.net.URL;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  *
  * @author n00b
  */
-public class AES_Killer extends javax.swing.JPanel {
+public class XES_Killer extends javax.swing.JPanel {
 
     /**
      * Creates new form AES_Killer
@@ -20,7 +20,7 @@ public class AES_Killer extends javax.swing.JPanel {
     
     BurpExtender _burpObj;
     
-    public AES_Killer(BurpExtender _b) {
+    public XES_Killer(BurpExtender _b) {
         this._burpObj = _b;
         initComponents();
         
@@ -78,7 +78,8 @@ public class AES_Killer extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+//        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox_hex = new javax.swing.JCheckBox();
         jPanel9 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
@@ -119,14 +120,14 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jButton1.setText("Stop AES Killer");
+        jButton1.setText("Stop XES Killer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Start AES Killer");
+        jButton2.setText("Start XES Killer");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -292,38 +293,41 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jLabel1.setText("Select Encryption");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/PKCS5Padding", "AES/ECB/PKCS5Padding" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/NoPadding","AES/CBC/ISO10126Padding","AES/CBC/PKCS5Padding","AES/CFB/NoPadding","AES/CFB/ISO10126Padding","AES/CFB/PKCS5Padding","AES/CTR/NoPadding","AES/CTR/ISO10126Padding","AES/CTR/PKCS5Padding","AES/CTS/NoPadding","AES/CTS/ISO10126Padding","AES/CTS/PKCS5Padding","AES/ECB/NoPadding","AES/ECB/ISO10126Padding","AES/ECB/PKCS5Padding","AES/OFB/NoPadding","AES/OFB/ISO10126Padding","AES/OFB/PKCS5Padding","DES/CBC/NoPadding","DES/CBC/ISO10126Padding","DES/CBC/PKCS5Padding","DES/CFB/NoPadding","DES/CFB/ISO10126Padding","DES/CFB/PKCS5Padding","DES/CTR/NoPadding","DES/CTR/ISO10126Padding","DES/CTR/PKCS5Padding","DES/CTS/NoPadding","DES/CTS/ISO10126Padding","DES/CTS/PKCS5Padding","DES/ECB/NoPadding","DES/ECB/ISO10126Padding","DES/ECB/PKCS5Padding","DES/OFB/NoPadding","DES/OFB/ISO10126Padding","DES/OFB/PKCS5Padding","Blowfish/CBC/NoPadding","Blowfish/CBC/ISO10126Padding","Blowfish/CBC/PKCS5Padding","Blowfish/CFB/NoPadding","Blowfish/CFB/ISO10126Padding","Blowfish/CFB/PKCS5Padding","Blowfish/CTR/NoPadding","Blowfish/CTR/ISO10126Padding","Blowfish/CTR/PKCS5Padding","Blowfish/CTS/NoPadding","Blowfish/CTS/ISO10126Padding","Blowfish/CTS/PKCS5Padding","Blowfish/ECB/NoPadding","Blowfish/ECB/ISO10126Padding","Blowfish/ECB/PKCS5Padding","Blowfish/OFB/NoPadding","Blowfish/OFB/ISO10126Padding","Blowfish/OFB/PKCS5Padding" }));
         jComboBox1.setName("encryption_type"); // NOI18N
 
-        jLabel2.setText("Secret Key (Base64 Encoded)");
+        jLabel2.setText("Secret Key ");
 
         jTextField1.setName("secretKey"); // NOI18N
 
-        jLabel3.setText("IV (Base64 Encoded)");
+        jLabel3.setText("IV (ECB can blank )");
 
         jTextField2.setName("iv"); // NOI18N
 
-        jCheckBox1.setText("Exclude / Ignore IV");
-        jCheckBox1.setName("excludeIV"); // NOI18N
+//        jCheckBox1.setText("Exclude / Ignore IV");
+//        jCheckBox1.setName("excludeIV"); // NOI18N
+
+        jCheckBox_hex.setText("HEX_format");
+        jCheckBox_hex.setName("HEX");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+            jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBox1, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1)
                     .addComponent(jTextField2)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
+//                          .addComponent(jCheckBox1)
                             .addComponent(jLabel3)
-                            .addComponent(jCheckBox1))
-                        .addGap(0, 204, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(jCheckBox_hex)
+                        .addGap(0, 204, Short.MAX_VALUE))
+                .addContainerGap()))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,7 +345,8 @@ public class AES_Killer extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(jCheckBox1)
+//                .addComponent(jCheckBox1)
+                .addComponent(jCheckBox_hex)
                 .addContainerGap())
         );
 
@@ -605,12 +610,25 @@ public class AES_Killer extends javax.swing.JPanel {
         this._burpObj._secret_key = _secret_key;
         return true;
     }
-    
+
+    public void input_format() {
+        if (this.jCheckBox_hex.isSelected()) {
+            this._burpObj._hex_format = true;
+        }
+        else {
+            this._burpObj._hex_format = false;
+        }
+
+    }
+
     public Boolean validate_iv_param(){
-        if(this.jCheckBox1.isSelected()){
+//        if(this.jCheckBox1.isSelected()){
+        if(this._burpObj._enc_type.indexOf("ECB")>0){
             this._burpObj._exclude_iv = true;
             return true;
         }
+
+
 
         String _iv_param = this.jTextField2.getText().trim();
         if(is_string_empty(_iv_param)){ JOptionPane.showMessageDialog(this, "Please provide a IV Parameter !!!"); return false; }
@@ -716,7 +734,7 @@ public class AES_Killer extends javax.swing.JPanel {
         
         // Validate Host
         if(!validate_host()){ return; }
-        
+        input_format();
         // Validate encryption / decryption input
         this._burpObj._enc_type = String.valueOf(this.jComboBox1.getSelectedItem());
         if(!validate_secret_key()) { return; }
@@ -734,7 +752,16 @@ public class AES_Killer extends javax.swing.JPanel {
         
         // Validate Response
         if(!validate_response_params()) { return; }
-        
+
+
+        // 确认输入格式
+//        if (this.jCheckBox_hex.isSelected()) {
+//            this._burpObj._hex_format = true;
+//        }
+//        else {
+//            this._burpObj._hex_format = false;
+//        }
+
         // Start AES Killer
         this._burpObj.start_aes_killer();
         
@@ -748,6 +775,17 @@ public class AES_Killer extends javax.swing.JPanel {
 
     private void jCheckBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox7ActionPerformed
+
+
+    private void jCheckBox_hexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
+
+        input_format();
+    }//GEN-LAST:event_jCheckBox7ActionPerformed
+
+    private void jCheckBox13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox7ActionPerformed
+
+        validate_debug_mode();
     }//GEN-LAST:event_jCheckBox7ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -781,6 +819,7 @@ public class AES_Killer extends javax.swing.JPanel {
         else{
             // Validate encryption / decryption input
             this._burpObj._enc_type = String.valueOf(this.jComboBox1.getSelectedItem());
+            input_format();
             if(!validate_secret_key()) { return; }
             if(!validate_iv_param()) { return; }
 
@@ -806,6 +845,7 @@ public class AES_Killer extends javax.swing.JPanel {
             this._burpObj._enc_type = String.valueOf(this.jComboBox1.getSelectedItem());
             if(!validate_secret_key()) { return; }
             if(!validate_iv_param()) { return; }
+            input_format();
 
             // Validate Obff + URL
             if(!validate_Obff()) { return; }
@@ -827,7 +867,8 @@ public class AES_Killer extends javax.swing.JPanel {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JCheckBox jCheckBox1;
+//    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox_hex;
     private javax.swing.JCheckBox jCheckBox10;
     private javax.swing.JCheckBox jCheckBox11;
     private javax.swing.JCheckBox jCheckBox12;

@@ -7,7 +7,9 @@ package burp;
 
 import java.awt.Component;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -19,10 +21,10 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyListener {
     
-    public String ExtensionName =  "AES Killer";
-    public String TabName =  "AES Killer";
-    public String _Header = "AES: Killer";
-    AES_Killer _aes_killer;
+    public String ExtensionName =  "XES Killer";
+    public String TabName =  "XES Killer";
+    public String _Header = "XES Killer";
+    XES_Killer _xes_killer;
     
     public IBurpExtenderCallbacks callbacks;
     public IExtensionHelpers helpers;
@@ -37,6 +39,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
    
     public String _host;
     public String _enc_type;
+    public String _algorithm;
     public String _secret_key;
     public String _iv_param;
     public String[] _req_param;
@@ -46,6 +49,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public String[] _replaceWithChar;
     
     public Boolean _exclude_iv = false;
+    public Boolean _hex_format = false;
     public Boolean _ignore_response = false;
     public Boolean _do_off = false;
     public Boolean _url_enc_dec = false;
@@ -60,7 +64,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public Boolean _is_ovrr_req_body_json = false;
     public Boolean _is_ovrr_res_body_json = false;
     
-    
+
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
         this.callbacks = callbacks;
@@ -68,10 +72,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         this.stdout = new PrintWriter(callbacks.getStdout(), true);
         this.stderr = new PrintWriter(callbacks.getStderr(), true);
         this.callbacks.setExtensionName(this.ExtensionName);
+        this.callbacks.registerContextMenuFactory(new CryptoMenuFactory(this));
         
-        _aes_killer = new AES_Killer(this);
+        _xes_killer = new XES_Killer(this);
         this.callbacks.addSuiteTab(this);
-        this.stdout.println("AES_Killer Installed !!!");
+        this.stdout.println("XES_Killer Installed !!!");
     }
 
     @Override
@@ -81,9 +86,13 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
 
     @Override
     public Component getUiComponent() {
-        return this._aes_killer;
+        return this._xes_killer;
     }
-    
+//    @Override
+//    public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
+//        ArrayList<JMenuItem> menu_item_list = new ArrayList<JMenuItem>();
+//        }
+//
     public void start_aes_killer(){
         this.callbacks.registerHttpListener(this);
         this.callbacks.registerProxyListener(this);
@@ -95,13 +104,13 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         this.callbacks.removeProxyListener(this);
         this.isRunning = false;
     }
-    
-    private void print_output(String _src, String str){
+
+    public void print_output(String _src, String str){
         if(! isDebug){ return; }
         this.stdout.println(_src + " :: " + str);
     }
-    
-    private void print_error(String _src, String str){
+
+    public void print_error(String _src, String str){
         if(! isDebug){ return; }
         this.stderr.println(_src + " :: " + str);
     }
@@ -135,24 +144,38 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
         return _paramString;
     }
-    
+
     public String do_decrypt(String _enc_str){
+
         try{
+            this._algorithm=this._enc_type.substring(0,3);
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
-            
-            if (this._exclude_iv){
+            sec_key = new SecretKeySpec(this._secret_key.getBytes(StandardCharsets.UTF_8),this._algorithm);
+//            if (this._hex_format){
+//
+//                sec_key = new SecretKeySpec(this._secret_key.getBytes(StandardCharsets.UTF_8),this._algorithm);
+//            }
+//            else {
+//                sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key), this._algorithm);
+//            }
+            if (this._enc_type.indexOf("ECB")>0){
                 cipher.init(Cipher.DECRYPT_MODE, sec_key);
             }
             else {
-                iv_param = new IvParameterSpec(this.helpers.base64Decode(this._iv_param));
+                iv_param = new IvParameterSpec(this._iv_param.getBytes(StandardCharsets.UTF_8));
                 cipher.init(Cipher.DECRYPT_MODE, sec_key, iv_param);
             }
             
             if (this._url_enc_dec) { _enc_str = this.helpers.urlDecode(_enc_str); }
             if (this._do_off) { _enc_str = this.remove_0bff(_enc_str); }
-            
-            _enc_str = new String (cipher.doFinal(this.helpers.base64Decode(_enc_str)));
+
+            if (this._hex_format){
+                _enc_str = new String(cipher.doFinal(this.hex2str(_enc_str)));
+            }
+            else {
+                _enc_str = new String(cipher.doFinal(this.helpers.base64Decode(_enc_str)));
+            }
+
             return _enc_str;
         }catch(Exception ex){
             print_error("do_decrypt", ex.getMessage());
@@ -160,20 +183,46 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
     }
 
+
+
     public String do_encrypt(String _dec_str){
         try{
+            this._algorithm=this._enc_type.substring(0,3);
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
-            
-            if (this._exclude_iv){
+            if(this._algorithm.equals("DES")){
+                    this._secret_key = this._secret_key + "\0\0\0\0\0\0\0\0";
+                    this._secret_key = this._secret_key.substring(0, 8);
+                    this._iv_param = this._iv_param + "\0\0\0\0\0\0\0\0";
+                    this._iv_param = this._iv_param.substring(0, 8);
+            }
+            if(this._algorithm.equals("AES")){
+                    this._secret_key = this._secret_key + "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+                    this._secret_key = this._secret_key.substring(0, 16);
+                    this._iv_param = this._iv_param + "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+                    this._iv_param = this._iv_param.substring(0, 16);
+            }
+            sec_key = new SecretKeySpec(this._secret_key.getBytes(StandardCharsets.UTF_8),this._algorithm);
+//            if (this._hex_format){
+//                sec_key = new SecretKeySpec(this._secret_key.getBytes(StandardCharsets.UTF_8),this._algorithm);
+//            }
+//            else {
+//                sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key), this._algorithm);
+//            }
+
+            if (this._enc_type.indexOf("ECB")>0){
                 cipher.init(Cipher.ENCRYPT_MODE, sec_key);
             }
             else {
-                iv_param = new IvParameterSpec(this.helpers.base64Decode(this._iv_param));
+                iv_param = new IvParameterSpec(this._iv_param.getBytes(StandardCharsets.UTF_8));
                 cipher.init(Cipher.ENCRYPT_MODE, sec_key, iv_param);
             }
-                        
-            _dec_str = new String (this.helpers.base64Encode(cipher.doFinal(_dec_str.getBytes())));
+            if (this._hex_format){
+                byte[] enc = cipher.doFinal(_dec_str.getBytes());
+                _dec_str = new BigInteger(1,enc).toString(16);
+            }
+            else {
+                _dec_str =this.helpers.base64Encode(cipher.doFinal(_dec_str.getBytes()));
+            }
             if (this._do_off) { _dec_str = this.do_0bff(_dec_str); }
             if (this._url_enc_dec) { _dec_str = this.helpers.urlEncode(_dec_str); }
             return _dec_str;
@@ -182,8 +231,35 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             return _dec_str;
         }
     }
-    
-    
+
+    public  byte[] hex2str(String str) throws Exception {
+        byte[] bytes = str.getBytes();
+        int length = bytes.length;
+        byte[] bArr = new byte[length / 2];
+        for (int i2 = 0; i2 < length; i2 += 2) {
+            bArr[i2 / 2] = (byte) Integer.parseInt(new String(bytes, i2, 2), 16);
+        }
+//        String ret = new String(bArr); //返回字符串
+
+        return bArr; //返回数组
+}
+    public  String str2hex(String str) throws Exception {
+        byte[] bArr = str.getBytes();
+        StringBuffer stringBuffer = new StringBuffer(bArr.length * 2);
+        for (int i2 : bArr) {
+            while (i2 < 0) {
+                i2 += 256;
+            }
+            if (i2 < 16) {
+                stringBuffer.append("0");
+            }
+            stringBuffer.append(Integer.toString(i2, 16));
+        }
+        return new String(stringBuffer);
+    }
+
+
+
     public byte[] update_req_params (byte[] _request, List<String> headers, String[] _params, Boolean _do_enc){
         for(int i = 0 ; i < _params.length; i++){
             IParameter _p = this.helpers.getRequestParameter(_request, _params[i]);
