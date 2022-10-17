@@ -41,7 +41,8 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                         this._burpObj.print_output("plainText", plainText);
 
                         if (plainText != null && plainText != "") {
-                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_INTRUDER || invocation.getToolFlag() == _burpObj.callbacks.TOOL_REPEATER|| invocation.getToolFlag() == _burpObj.callbacks.TOOL_PROXY) {
+                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_INTRUDER || invocation.getToolFlag() == _burpObj.callbacks.TOOL_REPEATER|| invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
+                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
                                 req.setRequest(Replace(request, invocation.getSelectionBounds(), plainTextBytes));
 
 
@@ -120,7 +121,8 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                         this._burpObj.print_output("Encrypt cryptoText", cryptoText);
 
                         if (cryptoText != null && cryptoText != "") {
-                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_INTRUDER || invocation.getToolFlag() == _burpObj.callbacks.TOOL_REPEATER|| invocation.getToolFlag() == _burpObj.callbacks.TOOL_PROXY) {
+                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_INTRUDER || invocation.getToolFlag() == _burpObj.callbacks.TOOL_REPEATER|| invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
+                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
                                 req.setRequest(Replace(request, invocation.getSelectionBounds(), cryptoTextBytes));
 
 
@@ -193,7 +195,8 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                         this._burpObj.print_output("rspplainText", rspplainText);
 
                         if (rspplainText != null && rspplainText != "") {
-                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_PROXY ) {
+                            if (invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
+                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
                                 req.setResponse(Replace(response, invocation.getSelectionBounds(), rspplainTextBytes));
 
                             } else {
@@ -237,7 +240,8 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                         this._burpObj.print_output("Encrypt respCryptoText", respCryptoText);
 
                         if (respCryptoText != null && respCryptoText != "") {
-                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_PROXY ) {
+                            if (invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
+                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
 
                                 //返回包添加
                                 req.setResponse(Replace(response, invocation.getSelectionBounds(),respCryptoTextBytes));
@@ -268,7 +272,7 @@ public class CryptoMenuFactory implements IContextMenuFactory {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JTextArea ta = new JTextArea(5, 20);
+                JTextArea ta = new JTextArea(20, 60);
                 ta.setText(message);
                 ta.setWrapStyleWord(true);
                 ta.setLineWrap(true);
