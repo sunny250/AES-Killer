@@ -15,7 +15,6 @@ public class CryptoMenuFactory implements IContextMenuFactory {
     @Override
     public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
         ArrayList<JMenuItem> menus = new ArrayList<>();
-        //if (invocation.getToolFlag() == parent.callbacks.TOOL_INTRUDER) {
         JMenuItem Decrypt = new JMenuItem("Decrypt");
         try {
             Decrypt.addActionListener(e -> {
@@ -27,7 +26,7 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                     {
                         byte[] request = req.getRequest();
                         String selectedText = getSelectedText(request, invocation.getSelectionBounds());
-//                        this._burpObj.print_output("request", new String(request));
+
                         this._burpObj.print_output("reqselectedText", selectedText);
                         if (selectedText != null && selectedText != "") {
                             String plainText = this._burpObj.do_decrypt(selectedText);
@@ -62,46 +61,6 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                         }
 
                     }
-//
-//                        byte[] request = req.getRequest();
-////                    byte[] selectedBytes = getSelectedBytes(request, invocation.getSelectionBounds());
-//                    String selectedText = getSelectedText(request, invocation.getSelectionBounds());
-//                    this._burpObj.print_output("request", new String(request));
-//                    this._burpObj.print_output("selectedText", selectedText);
-//
-////                    返回包添加
-//                    byte[] response = req.getResponse();
-//                    String   rspselectedText =getSelectedText(response, invocation.getSelectionBounds());
-//                    this._burpObj.print_output("response", new String(response));
-//                    this._burpObj.print_output("rspselectedText-------", rspselectedText);
-//
-//
-//                    if (selectedText != null && selectedText != "") {
-//                        String plainText = this._burpObj.do_decrypt(selectedText);
-//                        byte[] plainTextBytes = plainText.getBytes();
-//
-//                        this._burpObj.print_output("plainText", plainText);
-//
-//                        if (plainText != null && plainText != "") {
-//                            if (invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
-//                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
-//
-//                                if(invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST) {
-//                                    req.setRequest(Replace(request, invocation.getSelectionBounds(), plainTextBytes));
-//                                }else {
-//
-//                                    //返回包添加
-//                                    req.setResponse(Replace(response, invocation.getSelectionBounds(), rspplainTextBytes));
-////                                    ShowCopiableMessage(plainText, "This message plaintext is: ");
-//                                }
-//                            } else {
-//                                ShowCopiableMessage(plainText, "This message plaintext is: ");
-//                                req.setComment(plainText);
-//                            }
-//                        } else {
-//                            JOptionPane.showMessageDialog(Decrypt, "Not found!");
-//                        }
-//                    }
 
                 }
             });
@@ -109,10 +68,8 @@ public class CryptoMenuFactory implements IContextMenuFactory {
             this._burpObj.print_error("Decrypt error", ex.getMessage());
         }
         menus.add(Decrypt);
-        //}
-//
 
-        //if (invocation.getToolFlag() == parent.callbacks.TOOL_INTRUDER) {
+
         JMenuItem Encrypt = new JMenuItem("Encrypt");
         try {
             Encrypt.addActionListener(e -> {
@@ -124,7 +81,6 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                     {
                         byte[] request = req.getRequest();
                         String selectedText = getSelectedText(request, invocation.getSelectionBounds());
-//                        this._burpObj.print_output("request", new String(request));
                         this._burpObj.print_output("reqselectedText", selectedText);
                         if (selectedText != null && selectedText != "") {
                             String plainText = this._burpObj.do_encrypt(selectedText);
@@ -144,7 +100,6 @@ public class CryptoMenuFactory implements IContextMenuFactory {
                     {
                         byte[] response = req.getResponse();
                         String   selectedText =getSelectedText(response, invocation.getSelectionBounds());
-//                        this._burpObj.print_output("response", new String(response));
                         this._burpObj.print_output("rspselectedText", selectedText);
                         if (selectedText != null && selectedText != "") {
                             String plainText = this._burpObj.do_encrypt(selectedText);
@@ -160,138 +115,13 @@ public class CryptoMenuFactory implements IContextMenuFactory {
 
                     }
 
-////                    请求包处理
-//                    byte[] request = req.getRequest();
-////                    byte[] selectedBytes = getSelectedBytes(request, invocation.getSelectionBounds());
-//                    String selectedText = getSelectedText(request, invocation.getSelectionBounds());
-//                    this._burpObj.print_output("Encrypt request", new String(request));
-//                    this._burpObj.print_output("Encrypt selectedText", selectedText);
-//
-//
-//
-//                    if (selectedText != null && selectedText != "") {
-//                        String cryptoText = this._burpObj.do_encrypt(selectedText);
-//                        byte[] cryptoTextBytes = cryptoText.getBytes();
-//                        this._burpObj.print_output("Encrypt cryptoText", cryptoText);
-//
-//                        if (cryptoText != null && cryptoText != "") {
-////                            if (invocation.getToolFlag() == _burpObj.callbacks.TOOL_INTRUDER ||
-////                                    invocation.getToolFlag() == _burpObj.callbacks.TOOL_REPEATER||
-////                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
-////                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
-////                                req.setRequest(Replace(request, invocation.getSelectionBounds(), cryptoTextBytes));
-//                                if ( invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
-//                                        invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
-//                                    if(invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST) {
-//                                        req.setRequest(Replace(request, invocation.getSelectionBounds(), cryptoTextBytes));
-//                                    }else {
-//                                        //返回包添加
-//
-//                                        req.setResponse(Replace(response, invocation.getSelectionBounds(), cryptoTextBytes));
-//                                    }
-//                            } else {
-//                                ShowCopiableMessage(cryptoText, "This message cryptoText is: ");
-//                                req.setComment(cryptoText);
-//                            }
-//                        } else {
-//                            JOptionPane.showMessageDialog(Encrypt, "Not found!");
-//                        }
-//                    }
-
                 }
             });
         }catch (Exception ex){
             this._burpObj.print_error("Encrypt error", ex.getMessage());
         }
         menus.add(Encrypt);
-/*
-        JMenuItem rspDecrypt = new JMenuItem("rspDecrypt");
-        try {
-            rspDecrypt.addActionListener(e -> {
-                IHttpRequestResponse[] resps = invocation.getSelectedMessages();
-                if (resps.length > 0) {
-                    IHttpRequestResponse req = resps[0];
-                    byte[] response = req.getResponse();
-//                    byte[] selectedBytes = getSelectedBytes(request, invocation.getSelectionBounds());
-                    String rspselectedText = getSelectedText(response, invocation.getSelectionBounds());
-                    this._burpObj.print_output("response", new String(response));
-                    this._burpObj.print_output("selectedText", rspselectedText);
 
-                    if (rspselectedText != null && rspselectedText != "") {
-                        String rspplainText = this._burpObj.do_decrypt(rspselectedText);
-                        byte[] rspplainTextBytes = rspplainText.getBytes();
-                        this._burpObj.print_output("rspplainText", rspplainText);
-
-                        if (rspplainText != null && rspplainText != "") {
-                            if (invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
-                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
-                                req.setResponse(Replace(response, invocation.getSelectionBounds(), rspplainTextBytes));
-
-                            } else {
-                                ShowCopiableMessage(rspplainText, "This message rspplainText is: ");
-                                req.setComment(rspplainText);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(rspDecrypt, "Not found!");
-                        }
-                    }
-
-                }
-            });
-        }catch (Exception ex){
-            this._burpObj.print_error("Decrypt error", ex.getMessage());
-        }
-        menus.add(rspDecrypt);
-        //}
-//
-
-        //if (invocation.getToolFlag() == parent.callbacks.TOOL_INTRUDER) {
-        JMenuItem rspEncrypt = new JMenuItem("rspEncrypt");
-        try {
-            rspEncrypt.addActionListener(e -> {
-                IHttpRequestResponse[] resps = invocation.getSelectedMessages();
-                if (resps.length > 0) {
-                    IHttpRequestResponse req = resps[0];
-
-                    // 返回包处理
-                    //返回包添加
-
-                    byte[] response = req.getResponse();
-                    this._burpObj.print_output("Encrypt response", new String(response));
-//                    byte[] respSelectedBytes = getSelectedBytes(response, invocation.getSelectionBounds());
-                    String respSelectedText = getSelectedText(response, invocation.getSelectionBounds());
-//                    selectedText = selectedText + getSelectedText(response, invocation.getSelectionBounds());
-                    this._burpObj.print_output("Encrypt respSelectedText--------", respSelectedText);
-                    if (respSelectedText != null && respSelectedText != "") {
-                        String respCryptoText = this._burpObj.do_encrypt(respSelectedText);
-                        byte[] respCryptoTextBytes = respCryptoText.getBytes();
-                        this._burpObj.print_output("Encrypt respCryptoText", respCryptoText);
-
-                        if (respCryptoText != null && respCryptoText != "") {
-                            if (invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_REQUEST ||
-                                    invocation.getInvocationContext() == IContextMenuInvocation.CONTEXT_MESSAGE_EDITOR_RESPONSE ) {
-
-                                //返回包添加
-                                req.setResponse(Replace(response, invocation.getSelectionBounds(),respCryptoTextBytes));
-//                                ShowCopiableMessage(respCryptoText, "This message respCryptoText is: ");
-
-
-                            } else {
-                                ShowCopiableMessage(respCryptoText, "This message respCryptoText is: ");
-                                req.setComment(respCryptoText);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(Encrypt, "Not found!");
-                        }
-                    }
-                }
-            });
-        }catch (Exception ex){
-            this._burpObj.print_error("Encrypt error", ex.getMessage());
-        }
-        menus.add(rspEncrypt);
-
-*/
         return menus;
     }
 
@@ -311,13 +141,7 @@ public class CryptoMenuFactory implements IContextMenuFactory {
         });
     }
 
-//    private String searchKey(String key) {
-//        String value = _burpObj.dict.Search(key);
-//        if (value == null) {
-//            value = _burpObj.dict.Search(_burpObj.helpers.urlDecode(key));
-//        }
-//        return value;
-//    }
+
 
     private String getSelectedText(byte[] request, int[] selectedIndexRange) {
         String strArray[] = Arrays.stream(selectedIndexRange)
